@@ -1,5 +1,6 @@
 package d5700
 
+import d5700.app.EmulatorBootstrap
 import java.io.InputStream
 import java.io.PrintStream
 
@@ -8,17 +9,5 @@ fun main() {
 }
 
 fun runMain(input: InputStream, output: PrintStream) {
-    output.println("D5700 Emulator")
-    output.print("Enter the path to the program to load: ")
-
-    val programPath = input.bufferedReader().readLine()?.trim().orEmpty()
-
-    if (programPath.isBlank()) {
-        output.println("No program path provided. Exiting.")
-        return
-    }
-
-    output.println("Loading program: $programPath")
-
-    output.println("Program loading is not implemented yet.")
+    EmulatorBootstrap(input, output).start()
 }

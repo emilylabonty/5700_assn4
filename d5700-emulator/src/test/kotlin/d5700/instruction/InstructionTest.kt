@@ -31,7 +31,7 @@ class InstructionTest {
 
         instruction.execute(context, InstructionWord.fromInt(0x00FF))
 
-        assertEquals(2, context.registers.programCounter.value)
+        assertEquals(2, context.programCounterValue())
     }
 
     @Test
@@ -41,7 +41,7 @@ class InstructionTest {
 
         instruction.execute(context, InstructionWord.fromInt(0x00FF))
 
-        assertEquals(0, context.registers.programCounter.value)
+        assertEquals(0, context.programCounterValue())
     }
 
     private fun testContext(): ExecutionContext {

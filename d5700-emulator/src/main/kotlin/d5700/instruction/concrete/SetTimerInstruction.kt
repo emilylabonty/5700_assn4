@@ -13,6 +13,6 @@ class SetTimerInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.timer.set(value)
+        context.setTimer(value)
     }
 }

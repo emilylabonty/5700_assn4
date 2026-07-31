@@ -13,11 +13,8 @@ class ReadInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        val value = context.memoryBus.read(
-            address = context.registers.address,
-            useRom = context.registers.useRom
-        )
+        val value = context.readMemoryAtAddress()
 
-        context.registers.writeRegister(registerX, value)
+        context.writeRegister(registerX, value)
     }
 }

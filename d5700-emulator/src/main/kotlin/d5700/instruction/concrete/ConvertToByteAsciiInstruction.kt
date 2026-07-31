@@ -16,7 +16,7 @@ class ConvertByteToAsciiInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        val value = context.registers.readRegister(registerX).toInt()
+        val value = context.readRegister(registerX).toInt()
 
         if (value > 0xF) {
             throw InvalidHexDigitException(value)
@@ -28,6 +28,6 @@ class ConvertByteToAsciiInstruction : Instruction() {
             'A'.code + (value - 10)
         }
 
-        context.registers.writeRegister(registerY, ascii.toUByte())
+        context.writeRegister(registerY, ascii.toUByte())
     }
 }

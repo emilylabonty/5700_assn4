@@ -13,7 +13,7 @@ class JumpInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.programCounter.jumpTo(address)
+        context.jumpTo(address)
     }
 
     override fun updateProgramCounter(context: ExecutionContext) {

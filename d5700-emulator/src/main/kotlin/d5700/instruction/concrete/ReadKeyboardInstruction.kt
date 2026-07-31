@@ -13,6 +13,6 @@ class ReadKeyboardInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.writeRegister(registerX, context.keyboard.readByte())
+        context.writeRegister(registerX, context.readKeyboard())
     }
 }

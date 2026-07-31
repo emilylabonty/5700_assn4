@@ -13,6 +13,6 @@ class ReadTimerInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.writeRegister(registerX, context.registers.timer.read())
+        context.writeRegister(registerX, context.readTimer())
     }
 }

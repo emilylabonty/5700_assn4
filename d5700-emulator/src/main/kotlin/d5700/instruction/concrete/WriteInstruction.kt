@@ -13,12 +13,6 @@ class WriteInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        val value = context.registers.readRegister(registerX)
-
-        context.memoryBus.write(
-            address = context.registers.address,
-            value = value,
-            useRom = context.registers.useRom
-        )
+        context.writeMemoryAtAddress(context.readRegister(registerX))
     }
 }

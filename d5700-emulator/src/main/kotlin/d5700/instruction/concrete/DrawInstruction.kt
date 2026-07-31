@@ -18,14 +18,14 @@ class DrawInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        val asciiValue = context.registers.readRegister(registerX)
-        val row = context.registers.readRegister(registerY).toInt()
-        val column = context.registers.readRegister(registerZ).toInt()
+        val asciiValue = context.readRegister(registerX)
+        val row = context.readRegister(registerY).toInt()
+        val column = context.readRegister(registerZ).toInt()
 
         if (asciiValue.toInt() > 0x7F) {
             throw InvalidAsciiException(asciiValue.toInt())
         }
 
-        context.screen.draw(row, column, asciiValue)
+        context.draw(row, column, asciiValue)
     }
 }

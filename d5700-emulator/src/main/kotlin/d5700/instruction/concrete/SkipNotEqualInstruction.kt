@@ -16,14 +16,14 @@ class SkipNotEqualInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        shouldSkip = context.registers.readRegister(registerX) != context.registers.readRegister(registerY)
+        shouldSkip = context.readRegister(registerX) != context.readRegister(registerY)
     }
 
     override fun updateProgramCounter(context: ExecutionContext) {
         if (shouldSkip) {
-            context.registers.programCounter.skipNextInstruction()
+            context.skipNextInstruction()
         } else {
-            context.registers.programCounter.increment()
+            context.incrementProgramCounter()
         }
     }
 }

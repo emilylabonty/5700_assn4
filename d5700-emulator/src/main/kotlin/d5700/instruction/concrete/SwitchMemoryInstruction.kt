@@ -11,6 +11,6 @@ class SwitchMemoryInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.toggleMemoryMode()
+        context.toggleMemoryMode()
     }
 }

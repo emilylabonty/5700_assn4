@@ -13,6 +13,6 @@ class SetAddressInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        context.registers.setAddress(address)
+        context.setAddress(address)
     }
 }

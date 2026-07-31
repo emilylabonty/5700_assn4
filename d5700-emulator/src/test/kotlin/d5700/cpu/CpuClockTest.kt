@@ -10,7 +10,7 @@ class CpuClockTest {
         val clock = CpuClock()
         val timer = TimerRegister(10)
 
-        clock.afterInstruction(timer)
+        clock.afterInstruction(timer::tick)
 
         assertEquals(10u.toUByte(), timer.read())
     }
@@ -21,7 +21,7 @@ class CpuClockTest {
         val timer = TimerRegister(10)
 
         repeat(9) {
-            clock.afterInstruction(timer)
+            clock.afterInstruction(timer::tick)
         }
 
         assertEquals(9u.toUByte(), timer.read())
@@ -33,7 +33,7 @@ class CpuClockTest {
         val timer = TimerRegister(10)
 
         repeat(17) {
-            clock.afterInstruction(timer)
+            clock.afterInstruction(timer::tick)
         }
 
         assertEquals(8u.toUByte(), timer.read())
@@ -45,7 +45,7 @@ class CpuClockTest {
         val timer = TimerRegister(0)
 
         repeat(100) {
-            clock.afterInstruction(timer)
+            clock.afterInstruction(timer::tick)
         }
 
         assertEquals(0u.toUByte(), timer.read())
@@ -57,11 +57,11 @@ class CpuClockTest {
         val timer = TimerRegister(10)
 
         repeat(8) {
-            clock.afterInstruction(timer)
+            clock.afterInstruction(timer::tick)
         }
 
         clock.reset()
-        clock.afterInstruction(timer)
+        clock.afterInstruction(timer::tick)
 
         assertEquals(10u.toUByte(), timer.read())
     }

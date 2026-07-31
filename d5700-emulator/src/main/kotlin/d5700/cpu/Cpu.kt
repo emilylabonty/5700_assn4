@@ -33,26 +33,26 @@ class Cpu(
             return CpuRunResult(
                 stopReason = CpuStopReason.HALTED,
                 cyclesExecuted = 0,
-                finalProgramCounter = context.registers.programCounter.value
+                finalProgramCounter = context.programCounterValue()
             )
         }
 
         val instruction = decoder.decode(word)
         instruction.execute(context, word)
 
-        clock.afterInstruction(context.registers.timer)
+        clock.afterInstruction(context::tickTimer)
 
         return CpuRunResult(
             stopReason = CpuStopReason.RUNNING,
             cyclesExecuted = 1,
-            finalProgramCounter = context.registers.programCounter.value
+            finalProgramCounter = context.programCounterValue()
         )
     }
 
     private fun fetchInstruction(): InstructionWord {
-        val address = context.registers.programCounter.value
-        val highByte = context.memoryBus.readInstructionByte(address)
-        val lowByte = context.memoryBus.readInstructionByte(address + 1)
+        val address = context.programCounterValue()
+        val highByte = context.readInstructionByte(address)
+        val lowByte = context.readInstructionByte(address + 1)
 
         return InstructionWord(highByte, lowByte)
     }

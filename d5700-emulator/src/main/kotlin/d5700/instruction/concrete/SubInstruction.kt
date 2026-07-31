@@ -17,10 +17,10 @@ class SubInstruction : Instruction() {
     }
 
     override fun perform(context: ExecutionContext) {
-        val left = context.registers.readRegister(registerX).toInt()
-        val right = context.registers.readRegister(registerY).toInt()
+        val left = context.readRegister(registerX).toInt()
+        val right = context.readRegister(registerY).toInt()
         val result = ((left - right) and 0xFF).toUByte()
 
-        context.registers.writeRegister(registerZ, result)
+        context.writeRegister(registerZ, result)
     }
 }

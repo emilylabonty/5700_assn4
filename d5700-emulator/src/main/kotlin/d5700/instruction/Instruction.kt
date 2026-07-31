@@ -20,6 +20,6 @@ abstract class Instruction {
     protected abstract fun perform(context: ExecutionContext)
 
     protected open fun updateProgramCounter(context: ExecutionContext) {
-        context.registers.programCounter.increment()
+        context.incrementProgramCounter()
     }
 }

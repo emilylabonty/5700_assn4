@@ -1,20 +1,17 @@
 package d5700.app
 
-import d5700.core.Computer
 import d5700.error.EmulatorException
-import d5700.io.ConsoleDisplay
-import d5700.io.ConsoleKeyboardInput
-import java.io.InputStream
 import java.io.PrintStream
 
 class EmulatorApp(
-    private val input: InputStream = System.`in`,
+    private val programPathPrompt: ProgramPathPrompt,
+    private val computerFactory: ComputerFactory,
     private val output: PrintStream = System.out
 ) {
     fun start() {
         output.println("D5700 Emulator")
 
-        val programPath = ProgramPathPrompt(input, output).ask()
+        val programPath = programPathPrompt.ask()
 
         if (programPath.isBlank()) {
             output.println("No program path provided. Exiting.")
@@ -22,10 +19,7 @@ class EmulatorApp(
         }
 
         try {
-            val computer = Computer(
-                keyboard = ConsoleKeyboardInput(input, output),
-                display = ConsoleDisplay(output)
-            )
+            val computer = computerFactory.create()
 
             val byteCount = computer.loadProgram(programPath)
             output.println("Loaded $byteCount bytes into ROM.")

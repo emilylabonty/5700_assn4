@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="d5700.MainTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-07-31T01:41:05.723Z" hostname="EmilyLenovo" time="0.115">
+  <properties/>
+  <testcase name="runMain prints selected program path()" classname="d5700.MainTest" time="0.068"/>
+  <testcase name="runMain asks user for program path()" classname="d5700.MainTest" time="0.003"/>
+  <testcase name="runMain exits when program path is blank()" classname="d5700.MainTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

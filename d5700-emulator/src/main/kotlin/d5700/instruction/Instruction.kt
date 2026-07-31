@@ -1,60 +1,25 @@
 package d5700.instruction
 
-class InstructionWord(
-    val highByte: UByte,
-    val lowByte: UByte
-) {
-    val raw: UShort =
-        (((highByte.toInt() and 0xFF) shl 8) or (lowByte.toInt() and 0xFF)).toUShort()
+import d5700.core.ExecutionContext
 
-    val opcode: Opcode =
-        Opcode.fromNibble(nibble0)
+abstract class Instruction {
 
-    val nibble0: Int
-        get() = (raw.toInt() shr 12) and 0xF
-
-    val nibble1: Int
-        get() = (raw.toInt() shr 8) and 0xF
-
-    val nibble2: Int
-        get() = (raw.toInt() shr 4) and 0xF
-
-    val nibble3: Int
-        get() = raw.toInt() and 0xF
-
-    val byteLiteral: UByte
-        get() = (raw.toInt() and 0xFF).toUByte()
-
-    val addressLiteral: UShort
-        get() = (raw.toInt() and 0x0FFF).toUShort()
-
-    val isHalt: Boolean
-        get() = raw.toInt() == 0x0000
-
-    fun registerX(): Int = nibble1
-
-    fun registerY(): Int = nibble2
-
-    fun registerZ(): Int = nibble3
-
-    override fun toString(): String {
-        return raw.toInt().toString(16).uppercase().padStart(4, '0')
+    fun execute(context: ExecutionContext, word: InstructionWord) {
+        decode(word)
+        validate(context)
+        perform(context)
+        updateProgramCounter(context)
     }
 
-    companion object {
-        fun fromBytes(highByte: Byte, lowByte: Byte): InstructionWord {
-            return InstructionWord(highByte.toUByte(), lowByte.toUByte())
-        }
+    protected abstract fun decode(word: InstructionWord)
 
-        fun fromInt(value: Int): InstructionWord {
-            require(value in 0x0000..0xFFFF) {
-                "Instruction word must fit in 16 bits."
-            }
+    protected open fun validate(context: ExecutionContext) {
+        // Most instructions do not need extra validation.
+    }
 
-            val high = ((value shr 8) and 0xFF).toUByte()
-            val low = (value and 0xFF).toUByte()
+    protected abstract fun perform(context: ExecutionContext)
 
-            return InstructionWord(high, low)
-        }
+    protected open fun updateProgramCounter(context: ExecutionContext) {
+        context.registers.programCounter.increment()
     }
 }

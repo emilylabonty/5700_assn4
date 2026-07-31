@@ -1,16 +1,18 @@
 package d5700.core
 
+import d5700.cpu.Cpu
 import d5700.cpu.CpuStopReason
 import d5700.cpu.Registers
+import d5700.instruction.DefaultInstructionDecoder
 import d5700.io.Display
 import d5700.io.KeyboardInput
 import d5700.io.ScreenBuffer
 import d5700.memory.MemoryBus
+import d5700.memory.ProgramLoader
 import kotlin.io.path.createTempFile
 import kotlin.io.path.writeBytes
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class ComputerTest {
@@ -21,11 +23,7 @@ class ComputerTest {
         program.writeBytes(byteArrayOf(0x00, 0x00))
 
         val memoryBus = MemoryBus()
-        val computer = Computer(
-            memoryBus = memoryBus,
-            keyboard = FakeKeyboardInput(),
-            display = FakeDisplay()
-        )
+        val computer = createComputer(memoryBus = memoryBus)
 
         val byteCount = computer.loadProgram(program.toString())
 
@@ -47,11 +45,9 @@ class ComputerTest {
         registers.toggleMemoryMode()
         screen.draw(0, 0, 'X'.code.toUByte())
 
-        val computer = Computer(
+        val computer = createComputer(
             registers = registers,
-            screen = screen,
-            keyboard = FakeKeyboardInput(),
-            display = FakeDisplay()
+            screen = screen
         )
 
         computer.loadProgram(program.toString())
@@ -68,10 +64,7 @@ class ComputerTest {
         program.writeBytes(byteArrayOf(0x00, 0x00))
 
         val display = FakeDisplay()
-        val computer = Computer(
-            keyboard = FakeKeyboardInput(),
-            display = display
-        )
+        val computer = createComputer(display = display)
 
         computer.loadProgram(program.toString())
         val result = computer.run()
@@ -89,13 +82,7 @@ class ComputerTest {
         program.writeBytes(byteArrayOf(0x00, 0x00))
 
         val screen = ScreenBuffer()
-        screen.draw(0, 0, 'A'.code.toUByte())
-
-        val computer = Computer(
-            screen = screen,
-            keyboard = FakeKeyboardInput(),
-            display = FakeDisplay()
-        )
+        val computer = createComputer(screen = screen)
 
         computer.loadProgram(program.toString())
         screen.draw(0, 0, 'A'.code.toUByte())
@@ -103,6 +90,29 @@ class ComputerTest {
         val result = computer.run()
 
         assertEquals("A       ", result.screenText.lines().first())
+    }
+
+    private fun createComputer(
+        registers: Registers = Registers(),
+        memoryBus: MemoryBus = MemoryBus(),
+        screen: ScreenBuffer = ScreenBuffer(),
+        keyboard: KeyboardInput = FakeKeyboardInput(),
+        display: Display = FakeDisplay()
+    ): Computer {
+        val context = ExecutionContext(
+            registers = registers,
+            memoryBus = memoryBus,
+            screen = screen,
+            keyboard = keyboard
+        )
+
+        return Computer(
+            registers = registers,
+            screen = screen,
+            programLoader = ProgramLoader(memoryBus),
+            cpu = Cpu(context, DefaultInstructionDecoder()),
+            display = display
+        )
     }
 
     private class FakeKeyboardInput : KeyboardInput {
@@ -113,12 +123,8 @@ class ComputerTest {
         var renderWasCalled = false
             private set
 
-        var renderedScreen: ScreenBuffer? = null
-            private set
-
         override fun render(screenBuffer: ScreenBuffer) {
             renderWasCalled = true
-            renderedScreen = screenBuffer
         }
     }
 }

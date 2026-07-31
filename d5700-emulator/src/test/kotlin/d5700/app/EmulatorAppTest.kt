@@ -14,9 +14,8 @@ class EmulatorAppTest {
     fun `start prints title`() {
         val input = ByteArrayInputStream("\n".toByteArray())
         val outputBytes = ByteArrayOutputStream()
-        val app = EmulatorApp(input, PrintStream(outputBytes))
 
-        app.start()
+        createApp(input, outputBytes).start()
 
         assertTrue(outputBytes.toString().contains("D5700 Emulator"))
     }
@@ -25,9 +24,8 @@ class EmulatorAppTest {
     fun `start exits when path is blank`() {
         val input = ByteArrayInputStream("\n".toByteArray())
         val outputBytes = ByteArrayOutputStream()
-        val app = EmulatorApp(input, PrintStream(outputBytes))
 
-        app.start()
+        createApp(input, outputBytes).start()
 
         val output = outputBytes.toString()
 
@@ -38,9 +36,8 @@ class EmulatorAppTest {
     fun `start reports emulator error for missing program`() {
         val input = ByteArrayInputStream("missing-program.bin\n".toByteArray())
         val outputBytes = ByteArrayOutputStream()
-        val app = EmulatorApp(input, PrintStream(outputBytes))
 
-        app.start()
+        createApp(input, outputBytes).start()
 
         val output = outputBytes.toString()
 
@@ -55,9 +52,8 @@ class EmulatorAppTest {
 
         val input = ByteArrayInputStream("${program}\n".toByteArray())
         val outputBytes = ByteArrayOutputStream()
-        val app = EmulatorApp(input, PrintStream(outputBytes))
 
-        app.start()
+        createApp(input, outputBytes).start()
 
         val output = outputBytes.toString()
 
@@ -65,5 +61,18 @@ class EmulatorAppTest {
         assertTrue(output.contains("Program stopped: HALTED"))
         assertTrue(output.contains("Cycles executed: 1"))
         assertTrue(output.contains("Final program counter: 0"))
+    }
+
+    private fun createApp(
+        input: ByteArrayInputStream,
+        outputBytes: ByteArrayOutputStream
+    ): EmulatorApp {
+        val output = PrintStream(outputBytes)
+
+        return EmulatorApp(
+            programPathPrompt = ProgramPathPrompt(input, output),
+            computerFactory = ConsoleComputerFactory(input, output),
+            output = output
+        )
     }
 }

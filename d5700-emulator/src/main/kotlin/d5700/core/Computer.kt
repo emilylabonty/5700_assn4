@@ -1,13 +1,12 @@
 package d5700.core
 
 import d5700.cpu.Cpu
-import d5700.cpu.Registers
 import d5700.io.Display
 import d5700.io.ScreenBuffer
 import d5700.memory.ProgramLoader
 
 class Computer(
-    private val registers: Registers,
+    private val context: ExecutionContext,
     private val screen: ScreenBuffer,
     private val programLoader: ProgramLoader,
     private val cpu: Cpu,
@@ -17,8 +16,7 @@ class Computer(
 
     fun loadProgram(path: String): Int {
         loadedByteCount = programLoader.load(path).size
-        registers.reset()
-        screen.clear()
+        context.resetState()
         return loadedByteCount
     }
 

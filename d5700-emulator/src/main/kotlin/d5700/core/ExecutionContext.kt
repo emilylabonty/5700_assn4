@@ -74,4 +74,9 @@ class ExecutionContext(
     fun readInstructionByte(address: Int): UByte {
         return memoryBus.readInstructionByte(address)
     }
+
+    fun resetState() {
+        registers.reset()
+        screen.clear()
+    }
 }

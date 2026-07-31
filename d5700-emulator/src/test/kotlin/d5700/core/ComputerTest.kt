@@ -107,7 +107,7 @@ class ComputerTest {
         )
 
         return Computer(
-            registers = registers,
+            context = context,
             screen = screen,
             programLoader = ProgramLoader(memoryBus),
             cpu = Cpu(context, DefaultInstructionDecoder()),
